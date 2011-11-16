@@ -1,4 +1,6 @@
+-- ffi based bindings to libsndfile
 local rel_dir = assert ( debug.getinfo ( 1 , S ).source:match ( [=[^@(.-)[^/\]*$]=] ) , "Current directory unknown" )
+-- http://www.mega-nerd.com/libsndfile/
 
 local assert , error = assert , error
 local tonumber = tonumber
@@ -17,6 +19,7 @@ local ffi_process_defines 	= ffi_util.ffi_process_defines
 assert ( jit , "jit table unavailable" )
 local libsndfile_lib
 if jit.os == "Windows" then
+	-- On windows, assume offical binary has been installed
 	local basedir = getenv ( [[ProgramFiles(x86)]] ) or getenv ( [[ProgramFiles]] )
 	basedir = basedir .. [[\Mega-Nerd\libsndfile\]]
 
@@ -103,6 +106,7 @@ local sf_assert = function ( err )
 	end
 end
 
+-- Returns version string , major , minor , incremental
 local function version ( )
 	local data = ffi.new ( "char[128]" )
 	libsndfile_lib.sf_command ( nil , libsndfile_lib.SFC_GET_LIB_VERSION , data , ffi.sizeof ( data ) )
@@ -123,6 +127,11 @@ local function mask_format ( f )
 	return major , minor , endianess
 end
 
+-- Takes format
+-- returns:
+ -- the name of the major type
+ -- the name of the sub-type
+ -- the most common file extension for this type
 local function format_info ( f )
 	local data = ffi.new ( "SF_FORMAT_INFO[1]" )
 
@@ -139,7 +148,11 @@ local function format_info ( f )
 	return typename , subname , extension
 end
 
+-- Opens the given path
 -- For info, sample_rate , channels , format are required when the input file is a RAW file
+-- returns:
+ -- A sndfile object
+ -- Info
 local function openpath ( path , mode , info )
 	assert ( path , "No path provided" )
 
