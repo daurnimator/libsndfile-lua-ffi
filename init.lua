@@ -165,14 +165,14 @@ local function openpath ( path , mode , info )
 	end
 
 	info = info or { }
-	info = ffi.new ( "SF_INFO[1]" , info )
+	info = ffi.new ( "SF_INFO" , info )
 
-	local sndfile = libsndfile_lib.sf_open ( path , mode , info )
+	local sndfile = libsndfile_lib.sf_open ( path , mode , ffi.new ( "SF_INFO*" , info ) )
 	if sndfile == nil then
 		error ( ffi.string ( libsndfile_lib.sf_strerror ( sndfile ) ) )
 	end
 
-	return sndfile , info[0]
+	return sndfile , info
 end
 
 
