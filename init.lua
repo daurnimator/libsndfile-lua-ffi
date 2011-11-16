@@ -27,15 +27,14 @@ if jit.os == "Windows" then
 	ffi_add_include_dir ( basedir .. [[include\]] )
 	libsndfile_lib = ffi.load ( basedir .. [[\bin\libsndfile-1.dll]] )
 elseif jit.os == "Linux" or jit.os == "OSX" or jit.os == "POSIX" or jit.os == "BSD" then
-	ffi_add_include_dir [[/usr/include/]]
-	libsndfile_lib = ffi.load ( [[sndfile-1]] )
+	libsndfile_lib = ffi.load ( [[sndfile]] )
 else
 	error ( "Unknown platform" )
 end
 
 ffi_defs ( rel_dir .. [[libsndfile_defs.h]] , {
 		[[sndfile.h]] ;
-	} , false , { _STDIO_H_ = true , _INC_STDIO = true } ) -- Stop it from including stdio.h
+	} , false , { _STDIO_H = true , _STDIO_H_ = true , _INC_STDIO = true } ) -- Stop it from including stdio.h
 
 local majformats = { -- Major formats
 	WAV       = libsndfile_lib.SF_FORMAT_WAV ;   -- Microsoft WAV format (little endian).
