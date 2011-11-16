@@ -1,9 +1,7 @@
 local FILE = arg[1]
 
-local general 				= require"general"
-local current_script_dir 	= general.current_script_dir
-local rel_dir = assert ( current_script_dir ( ) , "Current directory unknown" )
-package.path = package.path .. ";" .. rel_dir .. "../?/init.lua"
+local rel_dir = assert ( debug.getinfo ( 1 , S ).source:match ( [=[^@(.-)[^/\]*$]=] ) , "Current directory unknown" )
+package.path = package.path .. ";init.lua;" .. rel_dir .. "../?/init.lua"
 
 local sndfile = require "libsndfile"
 

@@ -1,14 +1,11 @@
+local rel_dir = assert ( debug.getinfo ( 1 , S ).source:match ( [=[^@(.-)[^/\]*$]=] ) , "Current directory unknown" )
 
+local assert , error = assert , error
+local tonumber = tonumber
 local getenv = os.getenv
 
 local bit = require"bit"
 local band = bit.band
-
-local general 				= require"general"
-local current_script_dir 	= general.current_script_dir
-local reverse_lookup 		= general.reverse_lookup
-
-local rel_dir = assert ( current_script_dir ( ) , "Current directory unknown" )
 
 local ffi 					= require"ffi"
 local ffi_util 				= require"ffi_util"
@@ -32,7 +29,7 @@ else
 	error ( "Unknown platform" )
 end
 
-ffi_defs ( rel_dir .. [[defs.h]] , {
+ffi_defs ( rel_dir .. [[libsndfile_defs.h]] , {
 		[[sndfile.h]] ;
 	} )
 
