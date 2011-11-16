@@ -96,10 +96,6 @@ local masks = {
 	TYPE   = libsndfile_lib.SF_FORMAT_TYPEMASK ;
     ENDIAN = libsndfile_lib.SF_FORMAT_ENDMASK ;
 }
-reverse_lookup ( majformats , majformats )
-reverse_lookup ( subformats , subformats )
-reverse_lookup ( endianess , endianess )
-reverse_lookup ( masks , masks )
 
 local sf_assert = function ( err )
 	if err ~= 0 then
@@ -115,10 +111,15 @@ local function version ( )
 	return str , tonumber ( maj ) , tonumber ( min ) , tonumber ( inc )
 end
 
+-- Takes a format
+-- returns (as numbers):
+ -- the major type
+ -- sub-type
+ -- endianess
 local function mask_format ( f )
-	local major = majformats [ band ( masks.TYPE , f ) ]
-	local minor = subformats [ band ( masks.SUB , f ) ]
-	local endianess = endianess [ band ( masks.ENDIAN , f ) ]
+	local major = band ( masks.TYPE , f )
+	local minor = band ( masks.SUB , f )
+	local endianess = band ( masks.ENDIAN , f )
 	return major , minor , endianess
 end
 
