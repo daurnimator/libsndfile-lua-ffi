@@ -1,6 +1,8 @@
+-- A test for ffi based libsndfile bindings
+
 local FILE = arg[1]
 
-package.path = "./?/init.lua" .. package.path
+package.path = "./?/init.lua;" .. package.path
 package.loaded [ "libsndfile" ] = dofile ( "init.lua" )
 local sndfile = require "libsndfile"
 
@@ -20,9 +22,10 @@ print ( "Format      " , sndfile.format_info ( info.format ) )
 print ( "Sections    " , info.sections )
 print ( "Seekable?   " , info.seekable ~= 0 )
 
-print "\nDECODING TO FILE"
+local outfilename = "samples.raw"
+print ( "\nDECODING TO FILE: " .. outfilename )
 
-local out_fd = assert ( io.open ( "samples.raw" , "wb" ) )
+local out_fd = assert ( io.open ( outfilename , "wb" ) )
 
 local frames = 2^19
 local buff = ffi.new ( "int16_t[?]" , frames * info.channels)
