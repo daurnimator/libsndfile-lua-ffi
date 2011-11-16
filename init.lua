@@ -166,15 +166,21 @@ end
 local sndfile_methods = { }
 local sndfile_mt = { __index = sndfile_methods }
 
---[[
+-- TOFIX!
+-- Platform specific; could be wrong
+local seek_constants = {
+	["set"] = 0 ;
+	["cur"] = 1 ;
+	["end"] = 2 ;
+}
 function sndfile_methods:seek ( frames , whence )
-	whence = whence or libsndfile_lib.SEEK_SET
+	whence = seek_constants [ whence ] or seek_constants.set
 
-	res = libsndfile_lib.sf_seek ( self , frames , whence )
+	local res = libsndfile_lib.sf_seek ( self , frames , whence )
 
-	if res == -1 then error ( "Unable to seek" )
+	if res == -1 then error ( "Unable to seek" ) end
 	return res
-end--]]
+end
 
 function sndfile_methods:close ( )
 	sf_assert ( libsndfile_lib.sf_close ( self ) )
