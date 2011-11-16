@@ -35,7 +35,7 @@ end
 
 ffi_defs ( rel_dir .. [[libsndfile_defs.h]] , {
 		[[sndfile.h]] ;
-	} )
+	} , false , { _STDIO_H_ = true , _INC_STDIO = true } ) -- Stop it from including stdio.h
 
 local majformats = { -- Major formats
 	WAV       = libsndfile_lib.SF_FORMAT_WAV ;   -- Microsoft WAV format (little endian).
