@@ -13,23 +13,27 @@ print "\nOPENING FILE"
 local sf , info = sndfile.openpath ( FILE )
 
 print ( )
-print ( "#Frames:     " , info.frames )
-print ( "Sample Rate: " , info.samplerate )
-print ( "Channels:    " , info.channels )
-print ( "Format:      " , sndfile.format_info ( info.format ) )
-print ( "Sections:    " , info.sections )
-print ( "Seekable?    " , info.seekable ~= 0 )
+print ( "Frames      " , tonumber ( info.frames ) )
+print ( "Sample Rate " , info.samplerate )
+print ( "Channels    " , info.channels )
+print ( "Format      " , sndfile.format_info ( info.format ) )
+print ( "Sections    " , info.sections )
+print ( "Seekable?   " , info.seekable ~= 0 )
 
 print "\nDECODING TO FILE"
 
 local out_fd = assert ( io.open ( "samples.raw" , "wb" ) )
 
-local frames = 2^20
+local frames = 2^19
 local buff = ffi.new ( "int16_t[?]" , frames * info.channels)
+local i = 0
 repeat
-	local n = sf:read_short ( buff , frames )
-	print(n,ffi.sizeof ( "int16_t" ),info.channels)
+	io.stderr:write ( ("\r%3.0f%%"):format ( i / tonumber ( info.frames ) * 100 ) )
+	local n = tonumber ( sf:read_short ( buff , frames ) )
+	i = i + n
 	out_fd:write ( ffi.string ( buff , n * ffi.sizeof ( "int16_t" ) * info.channels ) )
 until n == 0
 
-print "\nDONE"
+io.stderr:write ( ("\r%3.0f%%\n"):format ( i / tonumber ( info.frames ) * 100 ) )
+
+print ( "\nDONE" )
