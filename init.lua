@@ -1,6 +1,7 @@
 -- ffi based bindings to libsndfile
-local rel_dir = assert ( debug.getinfo ( 1 , S ).source:match ( [=[^@(.-)[^/\]*$]=] ) , "Current directory unknown" )
 -- http://www.mega-nerd.com/libsndfile/
+
+local rel_dir = assert ( debug.getinfo ( 1 , "S" ).source:match ( [=[^@(.-[/\]?)[^/\]*$]=] ) , "Current directory unknown" ) .. "./"
 
 local assert , error = assert , error
 local tonumber = tonumber

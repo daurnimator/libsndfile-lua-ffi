@@ -1,8 +1,7 @@
 local FILE = arg[1]
 
-local rel_dir = assert ( debug.getinfo ( 1 , S ).source:match ( [=[^@(.-)[^/\]*$]=] ) , "Current directory unknown" )
-package.path = package.path .. ";init.lua;" .. rel_dir .. "../?/init.lua"
-
+package.path = "./?/init.lua" .. package.path
+package.loaded [ "libsndfile" ] = dofile ( "init.lua" )
 local sndfile = require "libsndfile"
 
 local ffi = require"ffi"
