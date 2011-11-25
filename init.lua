@@ -1,8 +1,6 @@
 -- ffi based bindings to libsndfile
 -- http://www.mega-nerd.com/libsndfile/
 
-local rel_dir = assert ( debug.getinfo ( 1 , "S" ).source:match ( [=[^@(.-[/\]?)[^/\]*$]=] ) , "Current directory unknown" ) .. "./"
-
 local assert , error = assert , error
 local tonumber = tonumber
 local getenv = os.getenv
@@ -10,12 +8,10 @@ local getenv = os.getenv
 local bit = require"bit"
 local band = bit.band
 
-local ffi 					= require"ffi"
-local ffi_util 				= require"ffi_util"
-local ffi_add_include_dir 	= ffi_util.ffi_add_include_dir
-local ffi_defs 				= ffi_util.ffi_defs
-local ffi_process_defines 	= ffi_util.ffi_process_defines
-
+local ffi                 = require"ffi"
+local ffi_util            = require"ffi_util"
+local ffi_add_include_dir = ffi_util.ffi_add_include_dir
+local ffi_defs            = ffi_util.ffi_defs
 
 assert ( jit , "jit table unavailable" )
 local libsndfile_lib
@@ -32,9 +28,9 @@ else
 	error ( "Unknown platform" )
 end
 
-ffi_defs ( rel_dir .. [[libsndfile_defs.h]] , {
+ffi_defs ( [[libsndfile_funcs.h]] , [[libsndfile_defs.h]] , {
 		[[sndfile.h]] ;
-	} , false , { _STDIO_H = true , _STDIO_H_ = true , _INC_STDIO = true } ) -- Stop it from including stdio.h
+	} )
 
 local majformats = { -- Major formats
 	WAV       = libsndfile_lib.SF_FORMAT_WAV ;   -- Microsoft WAV format (little endian).
